@@ -1,8 +1,0 @@
-# RENUEVA — robots.txt
-# MIENTRAS PRUEBAS en un hosting gratuito: se pide a los buscadores no indexar.
-User-agent: *
-Disallow: /
-
-# AL PUBLICAR la web real: borra la línea "Disallow: /" de arriba y deja esto:
-# User-agent: *
-# Allow: /
