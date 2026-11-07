@@ -97,7 +97,7 @@ const HERO_INTERVAL_MS = 8000;
    OTRA OPCIÓN: Formspree, con "https://formspree.io/f/xxxxxxxx".
    Si la dejas vacía (""), el formulario solo prepara el mensaje para enviarlo tú (Gmail o app de correo).
    SEGURIDAD: cualquier otra dirección será rechazada por el código y bloqueada por la CSP. */
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/" + COMPANY_EMAIL;
+const FORM_ENDPOINT = "";
 
 /* Protecciones anti-spam del formulario (puedes ajustar los números). */
 const FORM_MIN_SECONDS = 3;        // Tiempo mínimo desde que carga la página hasta poder enviar.
@@ -132,7 +132,12 @@ function isFormEndpointConfigured() {
 function buildWhatsappUrl(message = WHATSAPP_MESSAGE, number = WHATSAPP_NUMBER) {
   return "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
 }
-
+/* Enlace para redactar un correo nuevo en Gmail (funciona en computadora y en celular). */
+function buildGmailUrl(message) {
+  return "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(COMPANY_EMAIL) +
+    "&su=" + encodeURIComponent(message.subject) +
+    "&body=" + encodeURIComponent(message.body);
+}
 /* Construye un enlace mailto: con destinatario, asunto y cuerpo bien codificados
    (espacios, tildes y saltos de línea). */
 function buildMailtoUrl(subject = EMAIL_SUBJECT, body = EMAIL_BODY) {
@@ -1076,8 +1081,9 @@ function initContactForm() {
 
     if (useService) {
       sendToService(form, data, button, message);
-    } else if (isEmailConfigured()) {
-      setFormStatus("Mensaje preparado. Elige cómo enviarlo: no se envía hasta que lo mandes tú.", "success");
+        } else if (isEmailConfigured()) {
+      window.open(buildGmailUrl(message), "_blank", "noopener");
+      setFormStatus("Se abrió Gmail con tu mensaje listo. Pulsa «Enviar» en Gmail para terminar. Si no se abrió, usa una de estas opciones.", "success");
       showAlternatives(message);
     } else {
       setFormStatus("Falta configurar el correo de la empresa (COMPANY_EMAIL en js/main.js).", "error");
